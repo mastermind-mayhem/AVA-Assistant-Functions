@@ -1,0 +1,358 @@
+import os, time, playsound, urllib.parse, urllib.error, datetime
+import speech_recognition as sr
+from gtts import gTTS
+from datetime import date
+import calendar
+import bs4 as bs
+import urllib.request, sys, stdiomask, subprocess, webbrowser, pyperclip
+from collections import Counter
+
+from start import startup
+
+def respond(output):
+    try:
+        num="voice3"
+        response=gTTS(text=output, lang='en')
+        file = str(num)+".mp3"
+        response.save(file)
+        print(output)
+        playsound.playsound(file, False)
+        os.remove('voice3.mp3')
+    except:
+        print(output)
+
+def respond1(output):
+    try:
+        num="voice3"
+        response=gTTS(text=output, lang='en')
+        file = str(num)+".mp3"
+        response.save(file)
+        playsound.playsound(file)
+        os.remove('voice3.wav')
+    except:
+        print(output)
+
+def encrypt(text):
+    full = ""
+    alg = {
+        "z": "a",
+        "y": "b",
+        "x": "c",
+        "w": "d",
+        "v": "e",
+        "u": "f",
+        "t": "g",
+        "s": "h",
+        "r": "i",
+        "q": "j",
+        "p": "k",
+        "o": "l",
+        "n": "m",
+        "m": "n",
+        "l": "o",
+        "k": "p",
+        "j": "q",
+        "i": "r",
+        "h": "s",
+        "g": "t",
+        "f": "u",
+        "e": "v",
+        "d": "w",
+        "c": "x",
+        "b": "y",
+        "a": "z",
+        " ": " ",
+        "?": "?",
+        "!": "!",
+        ",": ",",
+    }
+    for decode in text:
+        #respond(alg[decode])
+        if decode not in alg:
+            full += decode
+        else:
+            full += alg[decode]
+    return full
+
+def inut(ques):
+    num="voice3"
+    response=gTTS(text=ques, lang='en')
+    file = str(num)+".mp3"
+    response.save(file)
+    playsound.playsound(file)
+    os.remove('voice3.mp3')
+    ans = input('] '+ques)
+    return ans
+
+funct = '''
+introduction
+logout
+current time
+calculator
+joke
+timer
+school mode
+google
+open(Following an application name)
+news
+gunstock
+echo
+shutdown
+weather'''
+
+afunct = '''
+encrypt
+remove user
+users
+developer mode'''
+admin = startup()
+joke = 1
+while True:
+    # r = sr.Recognizer()
+
+    # with sr.Microphone() as source:
+    # playsound.playsound("Slack - Tada.mp3")
+
+        # audio = r.listen(source)
+        #
+        # said = ""
+        #
+        # try:
+        #     said = r.recognize_google(audio)
+        #     print(said)
+        # except Exception as e:
+        #     print("Exception: " + str(e))
+        text = input(')(: ')
+        if "intro" in text:
+            respond("You are using Andromeda Virtual Assistant.")
+            # playsound.playsound("introduction.mp3")
+            respond("AVA was made by Dominic Couture, and powered by Python and Atom")
+            # playsound.playsound("introduction1.mp3")
+
+        elif "options" in text or "what can you do" in text:
+            respond("some options are")
+            respond(funct)
+            if admin == 'True':
+                print(' ')
+                print(' ')
+                print('____________________________')
+                respond(' ADMIN ONLY FUNCTIONS ')
+                print('____________________________')
+                respond(afunct)
+        
+        elif ("logout" in text)or("switch user" in text):
+            admin = startup()
+
+        elif "the time" in text or 'current time' in text:
+            respond("the time is "+ time.strftime('%H%M'))
+
+        elif "calcu" in text:
+            equ = input("Which equation would you like (+ - * / ): ")
+            if equ == "clear":
+                exit()
+            try:
+                num1 = float(input("What is your first number?: "))
+            except ValueError:
+                respond("please enter a number and you know what I mean")
+                num1 = float(input("What is your first number?: "))
+            try:
+                num2 = float(input("What is your second number?: "))
+            except ValueError:
+                respond("please enter a number and you know what I mean")
+                num2 = float(input("What is your second number?: "))
+            try:
+                if "+" in equ:
+                    ans = float(num1+num2)
+                    respond(ans)
+
+                if "-" in equ:
+                    ans = float(num1-num2)
+                    respond(ans)
+
+                if "*" in equ:
+                    ans = float(num1*num2)
+                    respond(ans)
+
+                if "/" in equ:
+                    ans = float(num1/num2)
+                    respond(ans)
+            except:
+                respond("I've been expecting you Mr Bond")
+
+        elif "joke" in text:
+            if joke == 5:
+                respond("How did the dentist become a brain surgeon?")
+                time.sleep(3)
+                respond("the drill slipped")
+                joke = joke + 1
+            if joke == 4:
+                respond("Which clock is better, analog or digital?")
+                time.sleep(3)
+                respond("analog hands down")
+                joke = joke + 1
+            if joke == 3:
+                respond("What's the best thing about Switzerland?")
+                time.sleep(3)
+                respond("I dont know but the flag is a big plus")
+                joke = joke + 1
+            if joke == 2:
+                respond("What did the Tin Man say when he got run over by a steamroller?")
+                time.sleep(3)
+                respond("“Curses! Foiled again!”")
+                joke = joke + 1
+            if joke == 1:
+                respond("What did one hat say to the other?")
+                time.sleep(3)
+                respond("You wait here. I’ll go on a head.")
+                joke = joke + 1
+            if joke >= 6:
+                joke = 1
+
+        elif "timer" in text:
+            timer = text[text.index("timer")-7:text.index("timer")-1]
+            if timer == "minute":
+                sleepm = int(text[text.index("minute")-3:text.index("minute")-1])
+                sleepm = sleepm*60
+                time.sleep(sleepm)
+                for i in range(10):
+                    playsound.playsound("Beep.mp3")
+            if timer == "second":
+                sleeps = int(text[text.index("second")-3:text.index("second")-1])
+                time.sleep(sleeps)
+                for i in range(2):
+                    time.sleep(2)
+                    for i in range(10):
+                        playsound.playsound("Beep.mp3")
+
+        elif "school mode" in text:
+            fp.school()
+
+        elif "echo" in text:
+            while True:
+                try:
+                    num1 = input("What would you like to say?: ")
+                    respond1(num1)
+                except KeyboardInterrupt:
+                    print(' ')
+                    break
+
+        elif "shutdown" in text:
+            shutdown()
+
+        elif "weather" in text:
+            source = urllib.request.urlopen('https://darksky.net/forecast/43.1704,-70.9952/us12/en').read()
+            soup = bs.BeautifulSoup(source,'lxml')
+            for paragraph in soup.find_all('span', class_='high-temp-text'):
+                hightemp = paragraph.text
+            for paragraph in soup.find_all('span', class_='low-temp-text'):
+                lowtemp = paragraph.text
+            for paragraph in soup.find_all('span', class_='summary swap'):
+                current = paragraph.text
+            respond('It is currently '+current+' with a high of '+hightemp+' and a low temp of '+lowtemp)
+
+
+        elif ("encrypt" in text)and(admin == "True"):
+            enc = inut("encrypt what?: ")
+            try:
+                ans1 = encrypt(enc)
+                respond(ans1)
+            except KeyError:
+                respond("please use only letters")
+                respond("Hi Ken")
+                respond("Yep, you broke it")
+
+        elif ("remove user" in text)and(admin =="True"):
+            d = None
+            f = False
+            with open("user.txt", "r")as w:
+                users = encrypt(w.read())
+                # print(users)
+                for user in users:
+                    # print(f, user)
+                    if f == True:
+                        if '}' in user:
+                            f = True
+                        if ']' in user:
+                            f = True
+                        if '.' in user:
+                            f = True
+                        else:
+                            tot += user
+                    if '}' in user:
+                        tot = user
+                        f = True
+                    if '.' in user:
+                        f = False
+                        print(tot)
+            remove = input("Remove which one?: ")
+            if remove == "clear":
+                break
+            with open("user.txt","r")as r:
+                greetings = encrypt(r.read())
+                for greet in greetings.split("\n"):
+                    # respond(greet, remove)
+                    if remove in greet:
+                        greet = ""
+                        respond("matched")
+                        print(greet)
+                        with open("user1.txt","a")as w:
+                            w.writelines(encrypt(greet))
+
+                    else:
+                        with open("user1.txt","a")as w:
+                            w.writelines(encrypt(greet+"\n"))
+                with open("user1.txt", "r")as q:
+                    rewrite = q.read()
+                with open("user.txt", "w")as k:
+                    k.write(rewrite)
+                os.remove("user1.txt")
+
+        elif ("users" in text)and(admin == "True"):
+            d = None
+            f = False
+            with open("user.txt", "r")as w:
+                users = encrypt(w.read())
+                # print(users)
+                for user in users:
+                    # print(f, user)
+                    if f == True:
+                        if '}' in user:
+                            f = True
+                        if ']' in user:
+                            f = True
+                        if '.' in user:
+                            f = True
+                        else:
+                            tot += user
+                    if '}' in user:
+                        tot = user
+                        f = True
+                    if '.' in user:
+                        f = False
+                        print(tot)
+
+        elif ("developer" in text)and(admin == "True"):
+            # subprocess.run('8Atom (2).lnk', shell=True)
+            respond1 ('Now running developer mode, to exit at any time Click Ctrl-C')
+            while True:
+                try:
+                    file = input('File Name?: ')
+                    file = 'python '+file+'.py'
+                    os.system(file)
+                    respond('Your program has finished')
+                except Exception as e:
+                    print ("error in level argument",e.args)
+                except KeyboardInterrupt:
+                    print(' ')
+                    break
+
+        elif ('shell' in text)and(admin == 'True'):
+            com = text[text.index('shell ')+6:]
+            print(com)
+            subprocess.run(com, shell=True)
+
+        elif ('online' in text)and(admin == 'True'):
+            try:
+                os.system('python online.py')
+            except:
+                print(' ')
